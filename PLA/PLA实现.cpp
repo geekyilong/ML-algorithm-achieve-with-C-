@@ -1,10 +1,10 @@
-/********************************************************/
-/*					Ğ´Ò»¸öPLA·ÖÀàÆ÷						*/
-/*		½â¾ö4Î¬Êı×éµÄ·ÖÀàÎÊÌâ	ÎÊµü´ú¶àÉÙ´ÎºóËã·¨ÊµÏÖ	*/
-//				1.ÕÒ´íÎóµã£»2.¾ÀÕı´íÎó¡£
-/********************************************************/
+/*************************************************************/
+/*		       å†™ä¸€ä¸ªPLAåˆ†ç±»	                         */
+/*	è§£å†³4ç»´æ•°ç»„çš„åˆ†ç±»é—®é¢˜	é—®è¿­ä»£å¤šå°‘æ¬¡åç®—æ³•å®ç°	    */
+/*      1.æ‰¾é”™è¯¯ç‚¹ï¼›2.çº æ­£é”™è¯¯ã€‚                             */
+/*********************************************************/
 
-#include<fstream>//¶ÁÎÄ¼şµÄÍ·ÎÄ¼ş
+#include<fstream>//è¯»æ–‡ä»¶çš„å¤´æ–‡ä»¶
 #include<iostream>
 #include<vector>
 
@@ -14,22 +14,23 @@ using namespace std;
 
 double weight[DEMENSION];
 int step=0;
-int n = 0;//Ñù±¾Êı
-char *file = "PLA - ¸±±¾.txt";
+int n = 0;//æ ·æœ¬æ•°
+char *file = "PLA - å‰¯æœ¬.txt";
 
-//´¢´æÑµÁ·Ñù±¾£»
-struct record {
+//å‚¨å­˜è®­ç»ƒæ ·æœ¬ï¼›
+struct record 
+{
 	double input[DEMENSION];
 	int output;
 };
 
-//°Ñ ¼ÇÂ¼ ´æÔÚÏòÁ¿Àï¶ø²»ÊÇ´æÔÚ½á¹¹ÌåÊı×éÄÚ£¬ÕâÑù¿ÉÒÔ¸ù¾İÊµ¼ÊÒ»ÏîÏîÌí¼Ó
+//æŠŠ è®°å½• å­˜åœ¨å‘é‡é‡Œ
 vector<record> trainingSet;
 
-//½«Êı¾İ¶Áµ½ÑµÁ·Ñù±¾ÏòÁ¿ÖĞÈ¥
+//å°†æ•°æ®è¯»åˆ°è®­ç»ƒæ ·æœ¬å‘é‡ä¸­å»
 void getData(ifstream &dataFile)
 {
-	while (!dataFile.eof())//¶Áµ½ÎÄ¼şÎ²²¿·µ»ØÕæ£¬·ÇÎÄ¼şÎ²²¿·µ»Ø¼Ù
+	while (!dataFile.eof())//è¯»åˆ°æ–‡ä»¶å°¾éƒ¨è¿”å›çœŸï¼Œéæ–‡ä»¶å°¾éƒ¨è¿”å›å‡
 	{
 		record curRecord;
 		curRecord.input[0] = 1;
@@ -44,7 +45,7 @@ void getData(ifstream &dataFile)
 	}
 	dataFile.close();
 	n = trainingSet.size();
-	cout << "Ñù±¾×Ü¹²ÓĞ" << n << "¸ö" << endl;
+	cout << "æ ·æœ¬æ€»å…±æœ‰" << n << "ä¸ª" << endl;
 
 }
 
@@ -74,21 +75,20 @@ void multiply(double *result, double *v, int demension, int num)
 
 void PLA()
 {
-	cout << "³ö´í" << endl;
-	int correctNum = 0;//µ±Ç°Á¬ĞøÕıÈ·Ñù±¾Êı£¬µ±µÈÓÚnÔò±íÃ÷ÂÖÍêÒ»È¦£¬Ôò±íÊ¾È«²¿ÕıÈ·£¬Ëã·¨½áÊø
-	int index = 0;//µ±Ç°ÕıÔÚ¼ÆËãµÄµÚ¼¸¸öÑù±¾
+	int correctNum = 0;//å½“å‰è¿ç»­æ­£ç¡®æ ·æœ¬æ•°ï¼Œå½“ç­‰äºnåˆ™è¡¨æ˜è½®å®Œä¸€åœˆï¼Œåˆ™è¡¨ç¤ºå…¨éƒ¨æ­£ç¡®ï¼Œç®—æ³•ç»“æŸ
+	int index = 0;//å½“å‰æ­£åœ¨è®¡ç®—çš„ç¬¬å‡ ä¸ªæ ·æœ¬
 	bool isFinished = 0;
-	while (!isFinished)//Ëã·¨Íê³ÉÊ±ÍË³öwhileÑ­»·
+	while (!isFinished)//ç®—æ³•å®Œæˆæ—¶é€€å‡ºwhileå¾ªç¯
 	{
 		if (trainingSet[index].output == sign(multiply(weight, trainingSet[index].input, DEMENSION)))correctNum++;
 		else 
 		{
-			//ĞŞÕıÈ¨ÖØw£»
+			//ä¿®æ­£æƒé‡wï¼›
 			double temp[DEMENSION];
 			multiply(temp, trainingSet[index].input, DEMENSION, trainingSet[index].output);
 			add(weight, temp, DEMENSION);
-			step++;//ĞŞÕıµÄ´ÎÊı
-			correctNum = 0;//³ö´íÁË£¬Ã»ÓĞÁ¬ĞøÕıÈ·
+			step++;//ä¿®æ­£çš„æ¬¡æ•°
+			correctNum = 0;//å‡ºé”™äº†ï¼Œæ²¡æœ‰è¿ç»­æ­£ç¡®
 			cout << "step" << step << ":" << endl << "index=" << index << "is wrong" << endl;
 		}
 		if (index == n - 1)index = 0;
@@ -104,16 +104,16 @@ void main()
 	
 	if (dataFile.is_open())
 	{
-		getData(dataFile);//½øÈëgetDataÖ®ºó¾Í²»³öÀ´ÁË
+		getData(dataFile);//è¿›å…¥getDataä¹‹åå°±ä¸å‡ºæ¥äº†
 	}
 	
 	else
 	{
-		cout << "³ö´í£¬ÎÄ¼ş´ò¿ªÊ§°Ü£¡" << endl;
+		cout << "å‡ºé”™ï¼Œæ–‡ä»¶æ‰“å¼€å¤±è´¥ï¼" << endl;
 		exit(1);
 	}
 	int i;
-	for (i = 0; i < DEMENSION; i++)weight[i] = 0.0;//(1)Ñ¡³õÖµw=0
+	for (i = 0; i < DEMENSION; i++)weight[i] = 0.0;//(1)é€‰åˆå€¼w=0
 	PLA();
 	system("pause");
 
